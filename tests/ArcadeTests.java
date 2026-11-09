@@ -6,7 +6,7 @@ import arcade.GamePanel;
 import arcade.Launcher;
 import utils.Commons;
 
-/** Dependency-free behavioral regression checks. Run with ./test.sh. */
+/** Dependency-free behavioral regression checks. Run with ./scripts/test.sh. */
 public final class ArcadeTests {
     private static int checks;
 

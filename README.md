@@ -9,13 +9,13 @@ Neural controllers for Breakout and Pac-Man, implemented in Java 17 with Swing. 
 Requires JDK 17+ with `java`, `javac` and `jar` on `PATH`, or `JAVA_HOME` set.
 
 ```bash
-./run.sh
+./scripts/run.sh
 ```
 
 Windows PowerShell:
 
 ```powershell
-./build.ps1
+./scripts/build.ps1
 java -jar build/ia-arcade.jar
 ```
 
@@ -45,8 +45,8 @@ This is **supervised imitation learning on engineered state features**. Pac-Man 
 ### Train
 
 ```bash
-./run.sh --train --game breakout --episodes 16 --epochs 24 --seed 42 --model models/breakout-custom.nn
-./run.sh --train --game pacman --episodes 32 --epochs 30 --seed 42 --model models/pacman-custom.nn
+./scripts/run.sh --train --game breakout --episodes 16 --epochs 24 --seed 42 --model models/breakout-custom.nn
+./scripts/run.sh --train --game pacman --episodes 32 --epochs 30 --seed 42 --model models/pacman-custom.nn
 ```
 
 `--episodes` sets episodes per round; `--epochs` sets total epochs; `--steps` limits each episode. Training writes:
@@ -91,16 +91,16 @@ Checkpoint ties retain the earlier round. Training logs include all epochs, incl
 Reproduce evaluation without retraining:
 
 ```bash
-./run.sh --benchmark --game breakout --episodes 20 --seed 1000042
-./run.sh --benchmark --game pacman --episodes 20 --seed 1000042
+./scripts/run.sh --benchmark --game breakout --episodes 20 --seed 1000042
+./scripts/run.sh --benchmark --game pacman --episodes 20 --seed 1000042
 ```
 
 ## Headless simulation
 
 ```bash
-./run.sh --headless --game breakout --seed 42
-./run.sh --headless --game pacman --controller neural --seed 42
-./run.sh --headless --game pacman --controller random --steps 6000
+./scripts/run.sh --headless --game breakout --seed 42
+./scripts/run.sh --headless --game pacman --controller neural --seed 42
+./scripts/run.sh --headless --game pacman --controller random --steps 6000
 ```
 
 `neural` is the default. `auto` selects the heuristic baseline; `random` selects seeded random actions. Output includes game, controller, seed, steps, score and fitness. Episodes stop on a win, loss of all lives or the step limit. Use `--help` for all options.
@@ -108,9 +108,9 @@ Reproduce evaluation without retraining:
 ## Tests
 
 ```bash
-./test.sh
+./scripts/test.sh
 # Windows:
-./build.ps1 -Test
+./scripts/build.ps1 -Test
 ```
 
 Tests cover nonlinear learning (XOR), reproducible end-to-end training, checkpoint validation, neural performance on separate evaluation seeds, deterministic trajectories, movement bounds, pause, restart and rendering without state mutation. CI builds and tests on Linux and Windows with Java 17 and 21.

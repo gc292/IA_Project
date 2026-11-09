@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
 JAVAC="${JAVA_HOME:+$JAVA_HOME/bin/}javac"
 JAR="${JAVA_HOME:+$JAVA_HOME/bin/}jar"
 if ! command -v "$JAVAC" >/dev/null 2>&1; then
