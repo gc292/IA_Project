@@ -113,7 +113,7 @@ Reproduce evaluation without retraining:
 ./scripts/build.ps1 -Test
 ```
 
-Tests cover nonlinear learning (XOR), reproducible end-to-end training, checkpoint validation, neural performance on separate evaluation seeds, deterministic trajectories, movement bounds, pause, restart and rendering without state mutation. CI builds and tests on Linux and Windows with Java 17 and 21.
+Tests cover nonlinear learning (XOR), reproducible end-to-end training, checkpoint validation, neural performance on separate evaluation seeds, deterministic trajectories, movement bounds, pause, restart and rendering without state mutation. CI builds and tests on Linux with Java 17 and 21.
 
 Optional UI checks after compiling the tests:
 
