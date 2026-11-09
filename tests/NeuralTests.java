@@ -50,7 +50,7 @@ public final class NeuralTests {
         }
         double[] snapshot = network.weights();
         snapshot[0] = 123456;
-        check(network.weights()[0] != 123456, "Weight snapshots cannot mutate the model");
+        check(network.weights()[0] != snapshot[0], "Weight snapshots cannot mutate the model");
     }
 
     private static double loss(NeuralNetwork network, double[][] x, int[] labels) {

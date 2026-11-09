@@ -99,7 +99,7 @@ public final class ArcadeTests {
                 "restart resets controller and world random state");
         int[] snapshot = a.getState();
         snapshot[0] = -999;
-        check(a.getState()[0] != -999, "state is an isolated snapshot");
+        check(a.getState()[0] != snapshot[0], "state is an isolated snapshot");
     }
 
     private static void boundedIdle(String game) {

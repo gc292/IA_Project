@@ -9,6 +9,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -18,6 +22,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import ai.ModelStore;
 import arcade.GamePanel;
@@ -59,7 +64,7 @@ public final class TrainingGuiSmoke {
                     collect(dialog, JTextField.class, fields);
                     for (JTextField field : fields) {
                         if (!(field instanceof JFormattedTextField)) {
-                            field.setText(model.toString());
+                            Objects.requireNonNull(field).setText(model.toString());
                         }
                     }
                     button(dialog, "Train").doClick();
@@ -78,27 +83,35 @@ public final class TrainingGuiSmoke {
             if ((System.nanoTime() - heartbeat) > 2_000_000_000L) {
                 throw new AssertionError("Training blocks the event thread");
             }
-            boolean[] done = {false};
-            long deadline = System.nanoTime() + 30_000_000_000L;
-            while (!done[0] && System.nanoTime() < deadline) {
-                SwingUtilities.invokeAndWait(
-                        () -> {
-                            java.util.List<JTextArea> areas = new ArrayList<>();
-                            collect(dialog, JTextArea.class, areas);
-                            for (JTextArea area : areas) {
-                                if (area.getText().contains("Error:")) {
-                                    throw new AssertionError(area.getText());
+            CountDownLatch finished = new CountDownLatch(1);
+            AtomicReference<String> trainingError = new AtomicReference<>();
+            Timer progressCheck =
+                    new Timer(
+                            50,
+                            event -> {
+                                java.util.List<JTextArea> areas = new ArrayList<>();
+                                collect(dialog, JTextArea.class, areas);
+                                for (JTextArea area : areas) {
+                                    if (area.getText().contains("Error:")) {
+                                        trainingError.set(area.getText());
+                                        finished.countDown();
+                                    }
+                                    if (area.getText().contains("Training complete.")) {
+                                        finished.countDown();
+                                    }
                                 }
-                                if (area.getText().contains("Training complete.")) {
-                                    done[0] = true;
-                                }
-                            }
-                        });
-                if (!done[0]) {
-                    Thread.sleep(50);
-                }
+                            });
+            SwingUtilities.invokeAndWait(progressCheck::start);
+            boolean completed;
+            try {
+                completed = finished.await(30, TimeUnit.SECONDS);
+            } finally {
+                SwingUtilities.invokeAndWait(progressCheck::stop);
             }
-            if (!done[0] || !Files.exists(model)) {
+            if (trainingError.get() != null) {
+                throw new AssertionError(trainingError.get());
+            }
+            if (!completed || !Files.exists(model)) {
                 throw new AssertionError("UI training did not finish");
             }
             SwingUtilities.invokeAndWait(
@@ -178,8 +191,8 @@ public final class TrainingGuiSmoke {
             if (type.isInstance(child)) {
                 found.add(type.cast(child));
             }
-            if (child instanceof Container) {
-                collect((Container) child, type, found);
+            if (child instanceof Container container) {
+                collect(container, type, found);
             }
         }
     }

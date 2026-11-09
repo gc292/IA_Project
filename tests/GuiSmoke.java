@@ -201,8 +201,8 @@ public final class GuiSmoke {
             if (type.isInstance(child)) {
                 found.add(type.cast(child));
             }
-            if (child instanceof Container) {
-                collect((Container) child, type, found);
+            if (child instanceof Container container) {
+                collect(container, type, found);
             }
         }
     }

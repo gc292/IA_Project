@@ -19,6 +19,8 @@ Windows PowerShell:
 java -jar build/ia-arcade.jar
 ```
 
+The Maven descriptor defines both source roots (`src` and `tests`) and the model resources for Java IDEs, including the Oracle Java extension in VS Code. With Maven installed, `mvn verify` runs the same headless regression suites and produces `build/maven/ia-arcade.jar`. The shell scripts require only the JDK.
+
 The default controller is **Neural network**. Select a game, controller and seed, then click **Start game**. **Train network** runs training in a background worker and loads the resulting checkpoint. **Load model…** selects an existing `.nn` file.
 
 | Input | Action |

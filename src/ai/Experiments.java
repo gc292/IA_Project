@@ -1,6 +1,7 @@
 package ai;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import arcade.GameFactory;
@@ -26,24 +27,21 @@ public final class Experiments {
             int episodes,
             int seed,
             int steps) {
+        Objects.requireNonNull(controller, "Controller");
         double total = 0, totalSteps = 0;
         int wins = 0;
         for (int episode = 0; episode < episodes; episode++) {
             int currentSeed = seed + episode;
-            GameController policy;
-            switch (controller) {
-                case "neural":
-                    policy = new NeuralController(game, network);
-                    break;
-                case "random":
-                    policy = GameFactory.controller(game, controller, currentSeed, null);
-                    break;
-                case "auto":
-                    policy = teacher(game);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid evaluation controller.");
-            }
+            GameController policy =
+                    switch (controller) {
+                        case "neural" -> new NeuralController(game, network);
+                        case "random" ->
+                                GameFactory.controller(game, controller, currentSeed, null);
+                        case "auto" -> teacher(game);
+                        default ->
+                                throw new IllegalArgumentException(
+                                        "Invalid evaluation controller.");
+                    };
             GamePanel panel = board(game, policy, currentSeed);
             panel.setMaxSteps(steps);
             panel.runSimulation();
@@ -68,8 +66,9 @@ public final class Experiments {
         }
         StringBuilder csv =
                 new StringBuilder(
-                        "game,controller,episodes,first_seed,max_steps,"
-                                + "mean_score,wins,mean_steps\n");
+                        """
+                        game,controller,episodes,first_seed,max_steps,mean_score,wins,mean_steps
+                        """);
         for (String controller : new String[] {"random", "auto", "neural"}) {
             Stats stats = evaluate(game, controller, network, episodes, seed, steps);
             String line =
