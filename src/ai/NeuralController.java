@@ -8,22 +8,47 @@ public final class NeuralController implements GameController {
     private final NeuralNetwork network;
     private int lastAction;
     private double confidence;
+
     public NeuralController(String game, NeuralNetwork network) {
-        if (network.inputs() != Features.inputs(game) || network.outputs() != Features.outputs(game))
-            throw new IllegalArgumentException("Network is incompatible with " + game + ".");
-        this.game = game; this.network = network;
+        validateNetwork(game, network);
+        this.game = game;
+        this.network = network;
     }
-    public NeuralNetwork network() { return network; }
-    public double confidence() { return confidence; }
-    @Override public void reset(int seed) { lastAction = 0; confidence = 0; }
-    @Override public int nextMove(int[] state) {
-        if (!Features.decisionPoint(game, state)) return lastAction;
+
+    static void validateNetwork(String game, NeuralNetwork network) {
+        if (network.inputs() != Features.inputs(game)
+                || network.outputs() != Features.outputs(game)) {
+            throw new IllegalArgumentException("Network is incompatible with " + game + ".");
+        }
+    }
+
+    public NeuralNetwork network() {
+        return network;
+    }
+
+    public double confidence() {
+        return confidence;
+    }
+
+    @Override
+    public void reset(int seed) {
+        lastAction = 0;
+        confidence = 0;
+    }
+
+    @Override
+    public int nextMove(int[] state) {
+        if (!Features.decisionPoint(game, state)) {
+            return lastAction;
+        }
         double[] probabilities = network.predict(Features.encode(game, state));
-        int best = -1; double probability = -1;
+        int best = -1;
+        double probability = -1;
         for (int i = 0; i < probabilities.length; i++) {
             int action = game.equals("breakout") ? i : i + 1;
             if (Features.legal(game, action, state) && probabilities[i] > probability) {
-                best = action; probability = probabilities[i];
+                best = action;
+                probability = probabilities[i];
             }
         }
         confidence = Math.max(0, probability);
