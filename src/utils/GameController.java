@@ -1,18 +1,11 @@
 package utils;
 
-// The GameController interface defines a method that allows a client to obtain the next move 
-// from the game controller.
-
+/** Chooses an action from a snapshot. 0 = idle, 1 = left, 2 = right,
+ * 3 = up and 4 = down (the latter two only apply to Pac-Man). */
+@FunctionalInterface
 public interface GameController {
+    int nextMove(int[] currentState);
 
-	/*
-	 * This method takes in an array of integers values as input and returns an integer value
-	 * as output. The input array represents the current state of the game, and the
-	 * output value represents the next move to be made by the player. The exact
-	 * format and meaning of these values will depend on the specific game being
-	 * played.
-	 */
-
-	public int nextMove(int[] currentState);
-
+    /** Reset any internal random state when an episode restarts. */
+    default void reset(int seed) { }
 }

@@ -1,0 +1,16 @@
+method=supervised_behavior_cloning_with_dataset_aggregation
+feature_version=1
+game=breakout
+seed=42
+episodes_per_round=16
+epochs=24
+max_steps=20000
+architecture=8,32,3
+parameters=387
+samples=24000
+validation_accuracy=1.000000
+validation_initial_score=2700.00
+validation_selected_score=2800.00
+validation_policy_seeds=100042..100049
+test_seeds=1000042..1000061
+selection=highest_mean_validation_score_after_each_round

@@ -1,0 +1,4 @@
+game,controller,episodes,first_seed,max_steps,mean_score,wins,mean_steps
+breakout,random,20,1000042,20000,520.00,0,818.00
+breakout,auto,20,1000042,20000,2800.00,20,7109.00
+breakout,neural,20,1000042,20000,2800.00,20,7109.00

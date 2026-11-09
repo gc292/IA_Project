@@ -1,0 +1,16 @@
+method=supervised_behavior_cloning_with_dataset_aggregation
+feature_version=1
+game=pacman
+seed=42
+episodes_per_round=32
+epochs=30
+max_steps=20000
+architecture=24,32,4
+parameters=932
+samples=23229
+validation_accuracy=0.980063
+validation_initial_score=351.25
+validation_selected_score=1790.00
+validation_policy_seeds=100042..100049
+test_seeds=1000042..1000061
+selection=highest_mean_validation_score_after_each_round

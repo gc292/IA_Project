@@ -1,0 +1,4 @@
+game,controller,episodes,first_seed,max_steps,mean_score,wins,mean_steps
+pacman,random,20,1000042,20000,884.00,0,2167.20
+pacman,auto,20,1000042,20000,1790.00,20,1426.35
+pacman,neural,20,1000042,20000,1790.00,20,1575.35

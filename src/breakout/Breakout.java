@@ -1,22 +1,14 @@
 package breakout;
 
 import javax.swing.JFrame;
-
 import utils.GameController;
 
+/** Standalone window retained for custom controller integrations. Construct on the EDT. */
 public class Breakout extends JFrame {
-
-	private static final long serialVersionUID = 1L;
-
-	public Breakout(GameController network, int i) {
-		add(new BreakoutBoard(network, true, i));
-		setTitle("Breakout");
-
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
-		setResizable(false);
-		pack();
-		setVisible(true);
-	}
-
+    public Breakout(GameController controller, int seed) {
+        setTitle("AI Arcade · Breakout");
+        add(new BreakoutBoard(controller, true, seed));
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        pack(); setLocationRelativeTo(null); setResizable(false); setVisible(true);
+    }
 }
